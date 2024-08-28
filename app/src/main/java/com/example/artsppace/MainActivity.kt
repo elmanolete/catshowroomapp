@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,7 @@ fun CatShowroomApp(modifier: Modifier = Modifier) {
     ) {
         ImageSection(
             modifier = modifier
-                .weight(4f)
+                .weight(3f)
                 .fillMaxSize()
         )
         ImageInfoSection(
@@ -62,8 +63,7 @@ fun CatShowroomApp(modifier: Modifier = Modifier) {
         )
         ButtonsSection(
             modifier = modifier
-                .weight(0.5f)
-                .fillMaxSize()
+                .weight(1f)
         )
     }
 }
@@ -131,16 +131,17 @@ fun ImageInfoSection(modifier: Modifier = Modifier) {
 fun ButtonsSection(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
+            .wrapContentSize(align = Alignment.Center)
     ) {
         Button(
             onClick = { /*TODO*/ },
-            modifier = modifier.wrapContentSize(align = Alignment.BottomCenter)
+            modifier = modifier.wrapContentSize(align = Alignment.Center)
         ) {
             Text(text = "Previous")
         }
         Button(
             onClick = { /*TODO*/ },
-            modifier = modifier.wrapContentSize(align = Alignment.BottomCenter)
+            modifier = modifier.wrapContentSize(align = Alignment.Center)
         ) {
             Text(text = "Next")
         }
