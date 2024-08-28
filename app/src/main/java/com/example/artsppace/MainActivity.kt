@@ -1,5 +1,6 @@
 package com.example.artsppace
 
+import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,11 +19,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -45,23 +52,63 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+class Artwork(val image: Int, val text: String, val name: String)
+
 @Composable
 fun CatShowroomApp(modifier: Modifier = Modifier) {
+
+    var currentArtworkIndex by remember { mutableIntStateOf(0) }
+
+    val artworks = listOf(
+        Artwork(
+            image = R.drawable.cat1,
+            text = stringResource(R.string.catFlowerTitle),
+            name = stringResource(
+                R.string.theGOAT
+            )
+        ),
+        Artwork(
+            image = R.drawable.cat2,
+            text = stringResource(R.string.aggressiveCat),
+            name = stringResource(
+                R.string.enrique3DSolis
+            )
+        ),
+        Artwork(
+            image = R.drawable.cat3,
+            text = stringResource(R.string.thinkingKillerCatTitle),
+            name = stringResource(
+                R.string.theScrum
+            )
+        ),
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
     ) {
         ImageSection(
+            image = artworks[currentArtworkIndex].image,
             modifier = modifier
                 .weight(3f)
                 .fillMaxSize()
         )
         ImageInfoSection(
+            text = artworks[currentArtworkIndex].text,
+            name = artworks[currentArtworkIndex].name,
             modifier = modifier
                 .weight(1f)
                 .fillMaxSize()
         )
         ButtonsSection(
+            onNext = {
+                currentArtworkIndex =
+                    if (currentArtworkIndex == artworks.size - 1) 0 else currentArtworkIndex + 1
+            },
+            onPrevious = {
+                currentArtworkIndex =
+                    if (currentArtworkIndex == 0) artworks.size - 1 else currentArtworkIndex - 1
+            },
             modifier = modifier
                 .weight(1f)
         )
@@ -69,7 +116,7 @@ fun CatShowroomApp(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ImageSection(modifier: Modifier = Modifier) {
+fun ImageSection(modifier: Modifier = Modifier, image: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -82,7 +129,7 @@ fun ImageSection(modifier: Modifier = Modifier) {
             )
         ) {
             Image(
-                painter = painterResource(id = R.drawable.cat1),
+                painter = painterResource(id = image),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = modifier
@@ -93,10 +140,10 @@ fun ImageSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ImageInfoSection(modifier: Modifier = Modifier) {
+fun ImageInfoSection(modifier: Modifier = Modifier, text: String, name: String) {
     val subtitleText = buildAnnotatedString {
         pushStyle(SpanStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
-        append("José Sanchez")
+        append(name)
         append(" ")
         pushStyle(SpanStyle(fontWeight = FontWeight.Thin))
         append("(circa 2023)")
@@ -113,7 +160,7 @@ fun ImageInfoSection(modifier: Modifier = Modifier) {
             modifier = modifier.padding(start = 16.dp)
         ) {
             Text(
-                text = "Impressive white car surrounded with flowers asdasd  asdasd asdasd asdasdasd  asdasdasdasdasda asdasd    asdasd",
+                text = text,
                 style = TextStyle(
                     fontWeight = FontWeight.Normal,
                     fontSize = 24.sp,
@@ -128,19 +175,19 @@ fun ImageInfoSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ButtonsSection(modifier: Modifier = Modifier) {
+fun ButtonsSection(modifier: Modifier = Modifier, onNext: () -> Unit, onPrevious: () -> Unit) {
     Row(
         modifier = modifier
             .wrapContentSize(align = Alignment.Center)
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onPrevious,
             modifier = modifier.wrapContentSize(align = Alignment.Center)
         ) {
             Text(text = "Previous")
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onNext,
             modifier = modifier.wrapContentSize(align = Alignment.Center)
         ) {
             Text(text = "Next")
