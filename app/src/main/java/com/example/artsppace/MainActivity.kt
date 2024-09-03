@@ -1,27 +1,29 @@
 package com.example.artsppace
 
-import android.media.Image
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,6 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.artsppace.ui.theme.ArtSppaceTheme
 
 class MainActivity : ComponentActivity() {
@@ -55,7 +59,14 @@ class MainActivity : ComponentActivity() {
 class Artwork(val image: Int, val text: String, val name: String)
 
 @Composable
-fun CatShowroomApp(modifier: Modifier = Modifier) {
+fun CatShowroomApp(
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
+    modifier: Modifier = Modifier
+) {
+    Log.i("windowWidthSizeClass", windowSizeClass.windowWidthSizeClass.toString())
+    Log.i("windowHeightSizeClass", windowSizeClass.windowHeightSizeClass.toString())
+
+    val expandedWidthScreen = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
 
     var currentArtworkIndex by remember { mutableIntStateOf(0) }
 
@@ -91,14 +102,16 @@ fun CatShowroomApp(modifier: Modifier = Modifier) {
             image = artworks[currentArtworkIndex].image,
             modifier = modifier
                 .weight(3f)
-                .fillMaxSize()
+                .fillMaxSize(fraction = if(expandedWidthScreen) 0.8f else 1f)
+                .align(alignment = Alignment.CenterHorizontally)
         )
         ImageInfoSection(
             text = artworks[currentArtworkIndex].text,
             name = artworks[currentArtworkIndex].name,
             modifier = modifier
                 .weight(1f)
-                .fillMaxSize()
+                .fillMaxSize(fraction = if(expandedWidthScreen) 0.5f else 1f)
+                .align(alignment = Alignment.CenterHorizontally)
         )
         ButtonsSection(
             onNext = {
@@ -111,6 +124,7 @@ fun CatShowroomApp(modifier: Modifier = Modifier) {
             },
             modifier = modifier
                 .weight(1f)
+                .padding(bottom = if(expandedWidthScreen) 16.dp else 0.dp)
         )
     }
 }
